@@ -1,0 +1,43 @@
+@(title: String, profiles: List[Profile], userForm: Form[Profile])
+<!DOCTYPE html>
+    <head>
+
+        <title>@title</title>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+        <script src="@routes.Assets.versioned("javascripts/hello.js")" type="text/javascript"></script>
+    </head>
+    <body>
+        <form action="@routes.ProfileController.createProfile()" method="post">
+        @if(null != userForm && userForm.hasErrors) {
+        	@for(error <- userForm.errors) {
+        		<li>@error</li>
+        	}
+        }
+        
+		First Name: <input type="text" name="firstName"/> <br>
+		Last Name: <input type="text" name="lastName"/> <br>
+		Email: <input type="text" name="emailAddress"/> <br>
+		Login: <input type="text" name="login"/> <br>
+		<button>Register</button>
+		
+		</form>
+		
+		<ul id="profiles">
+		@if(null != profiles && !profiles.isEmpty) {
+			@for(profile <- profiles) {
+				<li>@profile.emailAddress
+				<form action="@routes.ProfileController.getProfile(profile.id)" method="get">
+					<button>View As JSON</button>
+				</form>
+				<form action="@routes.ProfileController.getProfileForEdit(profile.id)">
+					<button>Edit</button>
+				</form>
+				<a href="@routes.Application.delete(profile.id)">Delete</a>
+				</li>
+			}
+		}
+			
+		</ul>
+    </body>
+</html>
